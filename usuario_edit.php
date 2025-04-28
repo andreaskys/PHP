@@ -1,4 +1,5 @@
 <?php
+global $conexao;
 session_start();
 require('conexao.php');
 ?>
@@ -10,7 +11,7 @@ require('conexao.php');
     <title>Usuario - Editar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
-  <body class="bg-dark">
+  <body class="bg-white">
     <?php include('navbar.php'); ?>
     <div class="container mt-5">
       <div class="row">
@@ -18,7 +19,7 @@ require('conexao.php');
           <div class="card">
             <div class="card-header">
               <h4>Editar Usuario
-                <a href="index.php" class="btn btn-danger float-end"">Voltar</a>
+                <a href="home.php" class="btn btn-danger float-end"">Voltar</a>
               </h4>
             </div>
             <div class="card-body">
@@ -46,26 +47,26 @@ require('conexao.php');
                 <input type="hidden" name="usuario_id" value="<?=$usuario['id']?>">
                 <div class="mb-3">
                   <label>Nome</label>
-                  <input type="text" name="nome" value="<?=$usuario['nome']?>" class="form-control border-dark">
+                        <input type="text" name="nome" value="<?=$usuario['nome']?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Como Prefere ser Chamado</label>
-                  <input type="text" name="preferencia_chamado" value="<?=$usuario['preferencia_chamado']?>" class="form-control border-dark">
+                        <input type="text" name="preferencia_chamado" value="<?=$usuario['preferencia_chamado']?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3 d-flex">
                   <div class="col-4 pe-3">
                     <label>Data de Nascimento</label>
-                    <input type="date" name="data_nascimento" value="<?=$usuario['data_nascimento']?>" class="form-control border-dark">
+                          <input type="date" name="data_nascimento" value="<?=$usuario['data_nascimento']?>" class="form-control border-dark">
                   </div>
                   <div class="col-4">
                     <label>Instagram</label>
-                    <input type="text" name="instagram" value="<?=$usuario['instagram']?>" class="form-control border-dark">
+                          <input type="text" name="instagram" value="<?=$usuario['instagram']?>" class="form-control border-dark">
                   </div>
                 </div>
                 <div class="mb-3 d-flex">
                   <div class="col-4 pe-3">
                     <label>Celular</label>
-                    <input type="text" name="celular" value="<?=$usuario['celular']?>" class="form-control border-dark">
+                          <input type="text" name="celular" value="<?=$usuario['celular']?>" class="form-control border-dark">
                   </div>
                   <div class="col-4">
                     <label>Ocupação</label>
@@ -99,7 +100,7 @@ require('conexao.php');
                 </div>
                 <div class="mb-3">
                   <label>Triglicérides</label>
-                  <input type="text" name="triglicerides" value="<?=$usuario['triglicerides']?>" class="form-control border-dark">
+                        <input type="text" name="triglicerides" value="<?=$usuario['triglicerides']?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Hipotireoidismo</label>
@@ -179,6 +180,46 @@ require('conexao.php');
                 </div>
                  
                 <!-- habitos -->
+
+                  <!--Auriculoterapia-->
+
+                  <h1>Auticuloterapia</h1>
+                  <div class="py-3">
+                      <div class="row">
+                          <div class="col-4">
+                              <input class="form-check-input border-dark" type="checkbox" name="auriculoterapia_constipacao" value="1"
+                                  <?php if (isset($usuario) && $usuario['auriculoterapia_constipacao'] == 1) echo 'checked'; ?>>
+                              <label class="form-check-label">Constipação</label>
+                          </div>
+                          <div class="col-4">
+                              <input class="form-check-input border-dark" type="checkbox" name="auriculoterapia_ansiedade" value="1"
+                                  <?php if (isset($usuario) && $usuario['auriculoterapia_ansiedade'] == 1) echo 'checked'; ?>>
+                              <label class="form-check-label">Ansiedade</label>
+                          </div>
+                          <div class="col-4">
+                              <input class="form-check-input border-dark" type="checkbox" name="auriculoterapia_insonia" value="1"
+                                  <?php if (isset($usuario) && $usuario['auriculoterapia_insonia'] == 1) echo 'checked'; ?>>
+                              <label class="form-check-label">Insonia</label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-4">
+                              <input class="form-check-input border-dark" type="checkbox" name="auriculoterapia_retencao" value="1"
+                                  <?php if (isset($usuario) && $usuario['auriculoterapia_retencao'] == 1) echo 'checked'; ?>>
+                              <label class="form-check-label">Retenção de liquido</label>
+                          </div>
+                          <div class="col-4">
+                              <input class="form-check-input border-dark" type="checkbox" name="auriculoterapia_nervosismo" value="1"
+                                  <?php if (isset($usuario) && $usuario['auriculoterapia_nervosismo'] == 1) echo 'checked'; ?>>
+                              <label class="form-check-label">Nervosismo</label>
+                          </div>
+                          <div class="col-4">
+                              <input class="form-check-input border-dark" type="checkbox" name="auriculoterapia_dor_cabeca" value="1"
+                                  <?php if (isset($usuario) && $usuario['auriculoterapia_dor_cabeca'] == 1) echo 'checked'; ?>>
+                              <label class="form-check-label">Dor de Cabeça</label>
+                          </div>
+                      </div>
+                  </div>
 
                 <!--GUIA-->
                 <div class="container mt-4 pt-5 pb-5">

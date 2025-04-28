@@ -1,4 +1,5 @@
 <?php
+global $conexao;
 require('conexao.php');
 ?>
 <!doctype html>
@@ -9,7 +10,7 @@ require('conexao.php');
     <title>Usuario - Visualizar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
-  <body class="bg-dark">
+  <body class="bg-white">
     <?php include('navbar.php'); ?>
     <div class="container mt-5">
       <div class="row">
@@ -17,7 +18,7 @@ require('conexao.php');
           <div class="card">
             <div class="card-header">
               <h4>Visualizar Paciente
-                <a href="index.php" class="btn btn-danger float-end"">Voltar</a>
+                <a href="home.php" class="btn btn-danger float-end"">Voltar</a>
               </h4>
             </div>
             <div class="card-body">

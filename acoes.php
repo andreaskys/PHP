@@ -1,4 +1,5 @@
 <?php
+global $conexao;
 session_start();
 require('conexao.php');
 
@@ -51,10 +52,10 @@ if(isset($_POST['create_usuario'])) {
 
   if(mysqli_affected_rows($conexao) > 0) {
     $_SESSION['mensagem'] = "Usuario adicionado com sucesso!";
-    header("Location: index.php");
+    header("Location: home.php");
   } else {
     $_SESSION['mensagem'] = "Erro ao adicionar usuario!";
-    header("Location: index.php");
+    header("Location: home.php");
   }
 }
 
@@ -121,7 +122,7 @@ if(isset($_POST['update_usuario'])) {
   $delete_sql = "DELETE FROM consultas WHERE usuario_id='$usuario_id'";
   if (!mysqli_query($conexao, $delete_sql)) {
       $_SESSION['mensagem'] = "Erro ao limpar dados antigos!";
-      header("Location: index.php");
+      header("Location: home.php");
       exit;
   }
 
@@ -138,13 +139,13 @@ if(isset($_POST['update_usuario'])) {
                      VALUES ('$usuario_id', '$data', '$peso_value', '$guia_value', '$cintura_value', '$quadril_value', '$observacao_value')";
       if (!mysqli_query($conexao, $insert_sql)) {
           $_SESSION['mensagem'] = "Erro ao salvar dados!";
-          header("Location: index.php");
+          header("Location: home.php");
           exit;
       }
   }
 
   $_SESSION['mensagem'] = "Usuario atualizado com sucesso!";
-  header("Location: index.php");
+  header("Location: home.php");
   exit;
 }
 
@@ -156,11 +157,11 @@ if(isset($_POST['delete_usuario'])) {
 
   if(mysqli_affected_rows($conexao) > 0) {
     $_SESSION['mensagem'] = "Usuario excluído com sucesso!";
-    header("Location: index.php");
+    header("Location: home.php");
     exit;
   } else {
     $_SESSION['mensagem'] = "Erro ao excluir usuario!";
-    header("Location: index.php");
+    header("Location: home.php");
     exit;
   }
 

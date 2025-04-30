@@ -1,32 +1,34 @@
 <?php
 
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
+require('conexao.php'); // Include the database connection file
+session_start();
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $host = "127.0.0.1";
-    $user = "root";
-    $dbpassword = "Anglo2003@";
-    $dbname = "dtfdb";
-
-    $conexao = new mysqli($host, $user, $dbpassword, $dbname);
-
-    if($conexao->connect_error) {
-        die("Erro ao conectar com o banco de dados". $conexao->connect_error);;
+    // Check if the connection is successful
+    if (!$conexao) {
+        die("Erro ao conectar com o banco de dados: " . mysqli_connect_error());
     }
 
-    $query = "SELECT * FROM login WHERE username = '$username' AND password = '$password'";
-    $result = $conexao->query($query);
+    // Use prepared statements to prevent SQL injection
+    $stmt = $conexao->prepare("SELECT * FROM login WHERE username = ? AND password = ?");
+    $stmt->bind_param("ss", $username, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if($result->num_rows > 0) {
+    if ($result->num_rows > 0) {
         header("Location: home.php");
-    }else {
+        exit();
+    } else {
+        echo "Invalid username or password.";
         exit();
     }
 
+    $stmt->close();
     $conexao->close();
-
 }
-
 ?>
+
+

@@ -34,27 +34,33 @@ require('conexao.php');
                 </thead>
                 <tbody>
                   <?php
-                  $sql = "SELECT * FROM usuarios";
-                  $usuarios = mysqli_query($conexao, $sql);
-                  if(mysqli_num_rows($usuarios) > 0) {
-                    foreach($usuarios as $usuario) {
+                  try {
+                      $sql = "SELECT * FROM usuarios";
+                      $stmt = $conexao->query($sql); // Use PDO's query method
+                      $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows as associative array
+
+                      if (count($usuarios) > 0) {
+                          foreach ($usuarios as $usuario) {
                   ?>
                   <tr>
-                    <td><?=$usuario['nome']?></td>
+                    <td><?= htmlspecialchars($usuario['nome']) ?></td>
                     <td>
-                      <a href="usuario_view.php?id=<?=$usuario['id']?>" class="btn btn-primary btn-sm">Visualizar</a>
-                      <a href="usuario_edit.php?id=<?=$usuario['id']?>" class="btn btn-success btn-sm">Editar</a>
+                      <a href="usuario_view.php?id=<?= htmlspecialchars($usuario['id']) ?>" class="btn btn-primary btn-sm">Visualizar</a>
+                      <a href="usuario_edit.php?id=<?= htmlspecialchars($usuario['id']) ?>" class="btn btn-success btn-sm">Editar</a>
                       <form action="acoes.php" method="POST" class="d-inline">
-                        <button onclick="return confirm('Tem Certeza que deseja excluir?')" type="submit" name="delete_usuario" value="<?=$usuario['id']?>" class="btn btn-danger btn-sm">
+                        <button onclick="return confirm('Tem Certeza que deseja excluir?')" type="submit" name="delete_usuario" value="<?= htmlspecialchars($usuario['id']) ?>" class="btn btn-danger btn-sm">
                           Excluir
                         </button>
                       </form>
                     </td>
                   </tr>
                   <?php
-                    }
-                  } else {
-                    echo'<h5>Nenhum Usuário encontrado</h5>';
+                          }
+                      } else {
+                          echo '<h5>Nenhum Usuário encontrado</h5>';
+                      }
+                  } catch (PDOException $e) {
+                      echo "Erro ao buscar usuários: " . $e->getMessage();
                   }
                   ?>
                 </tbody>

@@ -8,7 +8,7 @@ require('conexao.php');
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Usuario - Editar</title>
+    <title>Paciente - Editar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
   <body class="bg-white">
@@ -18,100 +18,106 @@ require('conexao.php');
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <h4>Editar Usuario
-                <a href="home.php" class="btn btn-danger float-end"">Voltar</a>
+              <h4>Editar Paciente
+                <a href="home.php" class="btn btn-danger float-end">Voltar</a>
               </h4>
             </div>
             <div class="card-body">
               <?php
-              if(isset($_GET['id'])){
-                $usuario_id = mysqli_real_escape_string($conexao, $_GET['id']);
-                $sql = "SELECT * FROM usuarios WHERE id='$usuario_id'";
-                $query = mysqli_query($conexao, $sql);
-                if (mysqli_num_rows($query) > 0) {
-                  $usuario = mysqli_fetch_array($query);
+              if (isset($_GET['id'])) {
+                  try {
+                      $usuario_id = $_GET['id'];
 
-                  // Fetch all consultations for the user
-                  $consultas_query = "SELECT * FROM consultas WHERE usuario_id='$usuario_id'";
-                  $consultas_result = mysqli_query($conexao, $consultas_query);
-                  $consultas = mysqli_fetch_all($consultas_result, MYSQLI_ASSOC); // Fetch all rows as an associative array
-                } else {
-                  $usuario = null;
-                  $consultas = [];
-                }
+                      // Use prepared statements to fetch user data
+                      $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE id = :id");
+                      $stmt->bindParam(':id', $usuario_id, PDO::PARAM_INT);
+                      $stmt->execute();
+
+                      if ($stmt->rowCount() > 0) {
+                          $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                          // Fetch all consultations for the user
+                          $consultas_stmt = $conexao->prepare("SELECT * FROM consultas WHERE usuario_id = :id");
+                          $consultas_stmt->bindParam(':id', $usuario_id, PDO::PARAM_INT);
+                          $consultas_stmt->execute();
+                          $consultas = $consultas_stmt->fetchAll(PDO::FETCH_ASSOC);
+                      } else {
+                          $usuario = null;
+                          $consultas = [];
+                      }
               ?>
-             
               <form action="acoes.php" method="POST">
-
-                 <!-- Informaçoes Pessoais -->
-                <input type="hidden" name="usuario_id" value="<?=$usuario['id']?>">
+                <!-- Informações Pessoais -->
+                <h1>Informações Pessoais</h1>
+                <input type="hidden" name="usuario_id" value="<?= htmlspecialchars($usuario['id']) ?>">
                 <div class="mb-3">
                   <label>Nome</label>
-                        <input type="text" name="nome" value="<?=$usuario['nome']?>" class="form-control border-dark">
+                  <input type="text" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Como Prefere ser Chamado</label>
-                        <input type="text" name="preferencia_chamado" value="<?=$usuario['preferencia_chamado']?>" class="form-control border-dark">
+                  <input type="text" name="preferencia_chamado" value="<?= htmlspecialchars($usuario['preferencia_chamado']) ?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3 d-flex">
                   <div class="col-4 pe-3">
                     <label>Data de Nascimento</label>
-                          <input type="date" name="data_nascimento" value="<?=$usuario['data_nascimento']?>" class="form-control border-dark">
+                    <input type="date" name="data_nascimento" value="<?= htmlspecialchars($usuario['data_nascimento']) ?>" class="form-control border-dark">
                   </div>
                   <div class="col-4">
                     <label>Instagram</label>
-                          <input type="text" name="instagram" value="<?=$usuario['instagram']?>" class="form-control border-dark">
+                    <input type="text" name="instagram" value="<?= htmlspecialchars($usuario['instagram']) ?>" class="form-control border-dark">
                   </div>
                 </div>
                 <div class="mb-3 d-flex">
                   <div class="col-4 pe-3">
                     <label>Celular</label>
-                          <input type="text" name="celular" value="<?=$usuario['celular']?>" class="form-control border-dark">
+                    <input type="text" name="celular" value="<?= htmlspecialchars($usuario['celular']) ?>" class="form-control border-dark">
                   </div>
                   <div class="col-4">
                     <label>Ocupação</label>
-                    <input type="text" name="ocupacao" value="<?=$usuario['ocupacao']?>" class="form-control border-dark">
+                    <input type="text" name="ocupacao" value="<?= htmlspecialchars($usuario['ocupacao']) ?>" class="form-control border-dark">
                   </div>
                 </div>
                 <div class="mb-3 d-flex">
                   <div class="col-4 pe-3">
                     <label>Idade</label>
-                    <input type="text" name="idade" value="<?=$usuario['idade']?>" class="form-control border-dark">
+                    <input type="text" name="idade" value="<?= htmlspecialchars($usuario['idade']) ?>" class="form-control border-dark">
                   </div>
                   <div class="col-4">
                     <label>Como nos Conheceu</label>
-                    <input type="text" name="como_conheceu" value="<?=$usuario['como_conheceu']?>" class="form-control border-dark">
+                    <input type="text" name="como_conheceu" value="<?= htmlspecialchars($usuario['como_conheceu']) ?>" class="form-control border-dark">
                   </div>
                 </div>
-                <!-- Informaçoes Pessoais -->
+                <!-- Informações Pessoais -->
 
                 <!-- Anamnese Clínica -->
+                 <h1>Anamnese Clínica</h1>
                 <div class="mb-3">
                   <label>Diabetes</label>
-                  <input type="text" name="diabetes" value="<?=$usuario['diabetes']?>" class="form-control border-dark">
+                  <input type="text" name="diabetes" value="<?= htmlspecialchars($usuario['diabetes']) ?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Hipertensão/Hipotensão</label>
-                  <input type="text" name="hipertensao" value="<?=$usuario['hipertensao']?>" class="form-control border-dark">
+                  <input type="text" name="hipertensao" value="<?= htmlspecialchars($usuario['hipertensao']) ?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Colesterol</label>
-                  <input type="text" name="colesterol" value="<?=$usuario['colesterol']?>" class="form-control border-dark">
+                  <input type="text" name="colesterol" value="<?= htmlspecialchars($usuario['colesterol']) ?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Triglicérides</label>
-                        <input type="text" name="triglicerides" value="<?=$usuario['triglicerides']?>" class="form-control border-dark">
+                  <input type="text" name="triglicerides" value="<?= htmlspecialchars($usuario['triglicerides']) ?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Hipotireoidismo</label>
-                  <input type="text" name="hipotireoidismo" value="<?=$usuario['hipotireoidismo']?>" class="form-control border-dark">
+                  <input type="text" name="hipotireoidismo" value="<?= htmlspecialchars($usuario['hipotireoidismo']) ?>" class="form-control border-dark">
                 </div>
                 <div class="mb-3">
                   <label>Peso Desejado</label>
-                  <input type="text" name="peso_desejado" value="<?=$usuario['peso_desejado']?>" class="form-control border-dark">
+                  <input type="text" name="peso_desejado" value="<?= htmlspecialchars($usuario['peso_desejado']) ?>" class="form-control border-dark">
                 </div>
-                 <!-- Anamnese Clínica -->
-
+                <!-- Anamnese Clínica -->
+                
                  <!-- habitos -->
                  <h1>Hábitos</h1>
                 <div class="row">
@@ -221,63 +227,72 @@ require('conexao.php');
                       </div>
                   </div>
 
-                <!--GUIA-->
+
+
+
+
+
+
+
+
+                <!-- GUIA -->
                 <div class="container mt-4 pt-5 pb-5">
-                <h2 class="mb-3 justify-content-center d-flex">GUIA</h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="dataTable"> 
-                        <thead class="bg-dark text-white">
+                  <h2 class="mb-3 justify-content-center d-flex">GUIA</h2>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="dataTable">
+                      <thead class="bg-dark text-white">
                         <tr>
-                            <th>DATA</th>
-                            <th>PESO</th>
-                            <th>GUIA</th>
-                            <th>CINTURA</th>
-                            <th>QUADRIL</th>
-                            <th>OBSERVAÇÃO</th>
+                          <th>DATA</th>
+                          <th>PESO</th>
+                          <th>GUIA</th>
+                          <th>CINTURA</th>
+                          <th>QUADRIL</th>
+                          <th>OBSERVAÇÃO</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                      </thead>
+                      <tbody>
                         <?php if (!empty($consultas)): ?>
-                            <?php foreach ($consultas as $consulta): ?>
-                                <tr>
-                                    <td><input type="date" name="data_consulta[]" value="<?= $consulta['data_consulta'] ?>" class="form-control border-dark"></td>
-                                    <td><input type="text" name="peso[]" value="<?= $consulta['peso'] ?>" class="form-control border-dark"></td>
-                                    <td><input type="text" name="guia[]" value="<?= $consulta['guia'] ?>" class="form-control border-dark"></td>
-                                    <td><input type="text" name="cintura[]" value="<?= $consulta['cintura'] ?>" class="form-control border-dark"></td>
-                                    <td><input type="text" name="quadril[]" value="<?= $consulta['quadril'] ?>" class="form-control border-dark"></td>
-                                    <td><input type="text" name="observacao[]" value="<?= $consulta['observacao'] ?>" class="form-control border-dark"></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+                          <?php foreach ($consultas as $consulta): ?>
                             <tr>
-                                <td><input type="date" name="data_consulta[]" class="form-control border-dark"></td>
-                                <td><input type="text" name="peso[]" class="form-control border-dark"></td>
-                                <td><input type="text" name="guia[]" class="form-control border-dark"></td>
-                                <td><input type="text" name="cintura[]" class="form-control border-dark"></td>
-                                <td><input type="text" name="quadril[]" class="form-control border-dark"></td>
-                                <td><input type="text" name="observacao[]" class="form-control border-dark"></td>
+                              <td><input type="date" name="data_consulta[]" value="<?= htmlspecialchars($consulta['data_consulta']) ?>" class="form-control border-dark"></td>
+                              <td><input type="text" name="peso[]" value="<?= htmlspecialchars($consulta['peso']) ?>" class="form-control border-dark"></td>
+                              <td><input type="text" name="guia[]" value="<?= htmlspecialchars($consulta['guia']) ?>" class="form-control border-dark"></td>
+                              <td><input type="text" name="cintura[]" value="<?= htmlspecialchars($consulta['cintura']) ?>" class="form-control border-dark"></td>
+                              <td><input type="text" name="quadril[]" value="<?= htmlspecialchars($consulta['quadril']) ?>" class="form-control border-dark"></td>
+                              <td><input type="text" name="observacao[]" value="<?= htmlspecialchars($consulta['observacao']) ?>" class="form-control border-dark"></td>
                             </tr>
+                          <?php endforeach; ?>
+                        <?php else: ?>
+                          <tr>
+                            <td><input type="date" name="data_consulta[]" class="form-control border-dark"></td>
+                            <td><input type="text" name="peso[]" class="form-control border-dark"></td>
+                            <td><input type="text" name="guia[]" class="form-control border-dark"></td>
+                            <td><input type="text" name="cintura[]" class="form-control border-dark"></td>
+                            <td><input type="text" name="quadril[]" class="form-control border-dark"></td>
+                            <td><input type="text" name="observacao[]" class="form-control border-dark"></td>
+                          </tr>
                         <?php endif; ?>
-                        </tbody>
+                      </tbody>
                     </table>
                     <div class="justify-content-center d-flex">
-                        <button id="addrowbtn" class="btn btn-primary add-row-btn">Adicionar Linha</button>
+                      <button id="addrowbtn" class="btn btn-primary add-row-btn">Adicionar Linha</button>
                     </div>
+                  </div>
                 </div>
-            </div>
-
-                <!--GUIA-->
+                <!-- GUIA -->
 
                 <div class="mb-3 justify-content-center d-flex">
                   <button type="submit" name="update_usuario" class="btn btn-primary">Salvar</button>
                 </div>
               </form>
               <?php
+                  } catch (PDOException $e) {
+                      echo "Erro ao buscar usuário: " . $e->getMessage();
+                  }
               } else {
-                echo "<h5>Usuario não encontrado</h5>";
+                  echo "<h5>Usuário não encontrado</h5>";
               }
-            
-            ?>
+              ?>
             </div>
           </div>
         </div>

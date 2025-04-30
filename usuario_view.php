@@ -18,42 +18,48 @@ require('conexao.php');
           <div class="card">
             <div class="card-header">
               <h4>Visualizar Paciente
-                <a href="home.php" class="btn btn-danger float-end"">Voltar</a>
+                <a href="home.php" class="btn btn-danger float-end">Voltar</a>
               </h4>
             </div>
             <div class="card-body">
               <?php
-              if(isset($_GET['id'])) {
-                $usuario_id = mysqli_real_escape_string($conexao, $_GET['id']);
-                $sql = "SELECT * FROM usuarios WHERE id='$usuario_id'";
-                $query = mysqli_query($conexao, $sql);
-                if (mysqli_num_rows($query) > 0) {
-                  $usuario = mysqli_fetch_array($query);
-                ?>
-              <!-- Informaçoes Pessoais -->
+              if (isset($_GET['id'])) {
+                  try {
+                      $usuario_id = $_GET['id'];
+
+                      // Use prepared statements to fetch user data
+                      $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE id = :id");
+                      $stmt->bindParam(':id', $usuario_id, PDO::PARAM_INT);
+                      $stmt->execute();
+
+                      if ($stmt->rowCount() > 0) {
+                          $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+              ?>
+              <!-- Informações Pessoais -->
+                <h1>Informações Pessoais</h1>
                 <div class="mb-3">
                   <label>Nome</label>
                   <p class="form-control border-dark">
-                  <?= $usuario['nome'] ?>
+                  <?= htmlspecialchars($usuario['nome']) ?>
                   </p>
                 </div>
                 <div class="mb-3">
                   <label>Como Prefere ser chamado</label>
                   <p class="form-control border-dark">
-                  <?= $usuario['preferencia_chamado'] ?>
+                  <?= htmlspecialchars($usuario['preferencia_chamado']) ?>
                   </p>
                 </div>
                 <div class="mb-3 d-flex">
                   <div class="col-4 pe-3">
                     <label>Data Nascimento</label>
                     <p class="form-control border-dark">
-                    <?=date('d/m/Y', strtotime($usuario['data_nascimento']));?>
+                    <?= htmlspecialchars(date('d/m/Y', strtotime($usuario['data_nascimento']))) ?>
                     </p>
                   </div>
                   <div class="col-4">
                   <label>Instagram</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['instagram']?>
+                    <?= htmlspecialchars($usuario['instagram']) ?>
                     </p>
                   </div>
                 </div>
@@ -61,13 +67,13 @@ require('conexao.php');
                   <div class="col-4 pe-3">
                     <label>Celular</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['celular']?>
+                    <?= htmlspecialchars($usuario['celular']) ?>
                     </p>
                   </div>
                   <div class="col-4">
                   <label>Ocupação</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['ocupacao']?>
+                    <?= htmlspecialchars($usuario['ocupacao']) ?>
                     </p>
                   </div>
                 </div>
@@ -75,53 +81,54 @@ require('conexao.php');
                   <div class="col-4 pe-3">
                     <label>Idade</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['idade']?>
+                    <?= htmlspecialchars($usuario['idade']) ?>
                     </p>
                   </div>
                   <div class="col-4">
                   <label>Como nos Conheceu</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['como_conheceu']?>
+                    <?= htmlspecialchars($usuario['como_conheceu']) ?>
                     </p>
                   </div>
                 </div> 
-              <!-- Informaçoes Pessoais -->
+              <!-- Informações Pessoais -->
 
               <!-- Anamnese Clínica -->
+                  <h1>Anamnese Clínica</h1>
                   <div class="mb-3">
                     <label>Diabetes</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['diabetes'] ?>
+                    <?= htmlspecialchars($usuario['diabetes']) ?>
                     </p>
                   </div>
                   <div class="mb-3">
                     <label>Hipertensão/Hipotensão</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['hipertensao'] ?>
+                    <?= htmlspecialchars($usuario['hipertensao']) ?>
                     </p>
                   </div>
                   <div class="mb-3">
                     <label>Colesterol</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['colesterol'] ?>
+                    <?= htmlspecialchars($usuario['colesterol']) ?>
                     </p>
                   </div>
                   <div class="mb-3">
                     <label>triglicérides</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['triglicerides'] ?>
+                    <?= htmlspecialchars($usuario['triglicerides']) ?>
                     </p>
                   </div>
                   <div class="mb-3">
                     <label>Hipotireoidismo</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['hipotireoidismo'] ?>
+                    <?= htmlspecialchars($usuario['hipotireoidismo']) ?>
                     </p>
                   </div>
                   <div class="mb-3">
                     <label>Peso Desejado</label>
                     <p class="form-control border-dark">
-                    <?= $usuario['peso_desejado'] ?>
+                    <?= htmlspecialchars($usuario['peso_desejado']) ?>
                     </p>
                   </div>
               <!-- Anamnese Clínica -->
@@ -181,19 +188,19 @@ require('conexao.php');
                     <div class="mb-3 col-8">
                       <label>Qual?</label>
                       <p class="form-control border-dark">
-                        <?= $usuario['tipo_atividade'] ?>
+                        <?= htmlspecialchars($usuario['tipo_atividade']) ?>
                       </p>
                     </div>
                     <div class="mb-3 col-8">
                       <label>Quantas vezes por semana?</label>
                       <p class="form-control border-dark">
-                        <?= $usuario['frequencia_atividade'] ?>
+                        <?= htmlspecialchars($usuario['frequencia_atividade']) ?>
                       </p>
                     </div>
                     <div class="mb-3">
                       <label>Observações</label>
                       <p class="form-control border-dark">
-                        <?= $usuario['observacoes'] ?>
+                        <?= htmlspecialchars($usuario['observacoes']) ?>
                       </p>
                     </div>
                   </div>
@@ -244,9 +251,12 @@ require('conexao.php');
                 <!-- auriculoterapai-->
 
                 <?php
-                } else {
-                  echo "<h5>Usuario não encontrado</h5>";
-                }
+                      } else {
+                          echo "<h5>Usuário não encontrado</h5>";
+                      }
+                  } catch (PDOException $e) {
+                      echo "Erro ao buscar usuário: " . $e->getMessage();
+                  }
               }
               ?>
             </div>

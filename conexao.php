@@ -4,8 +4,12 @@ define('USUARIO', 'root');
 define('SENHA', 'Anglo2003@');
 define('DB', 'dtfdb');
 
-$conexao = mysqli_connect(HOST, USUARIO, SENHA, DB) or die ('Nao foi possivel conectar');
-
+try {
+    $conexao = new PDO("mysql:host=" . HOST . ";dbname=" . DB, USUARIO, SENHA);
+    $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erro ao conectar com o banco de dados: " . $e->getMessage());
+}
 ?>
 
 
